@@ -12,7 +12,13 @@ namespace IDataRepository
 		// Méthode qui renvoit  la liste des étudiants
 		IQueryable<Student> GetStudents();
 
-		// Méthode pour créer un étudiant
-		Task<Student> CreateStudent(Student student);
+        Task<Student> GetStudentById(int id);
+
+        // Méthode pour créer un étudiant
+        Task<Student> CreateStudent(Student student);
+
+		Task<Student> UpdateStudent(Student student);
+
+		Task<Student> DeleteStudent(Student student);
 	}
 }

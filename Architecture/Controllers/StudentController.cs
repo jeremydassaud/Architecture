@@ -28,8 +28,13 @@ namespace Architecture.Controllers
 		// GET: StudentController/Details/5
 		public ActionResult Details(int id)
 		{
-			return View();
-		}
+            var student = context.GetStudentById(id).Result;
+            if(student == null)
+            {
+                return NotFound();
+            }
+            return View(student);
+        }
 
 		// GET: StudentController/Create
 		public ActionResult Create()
@@ -53,42 +58,65 @@ namespace Architecture.Controllers
 		}
 
 		// GET: StudentController/Edit/5
-		public ActionResult Edit(int id)
+		public async Task<ActionResult> Edit(int id)
 		{
-			return View();
+            var student = await context.GetStudentById(id);
+            if(student == null)
+            {
+                return NotFound();
+            }
+            return View(student);
 		}
 
 		// POST: StudentController/Edit/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
+		public async Task<ActionResult> Edit(int id, Student student)
 		{
-			try
+            if(id != student.Id)
+            {
+                return BadRequest();
+            }
+
+            try
 			{
-				return RedirectToAction(nameof(Index));
+                await context.UpdateStudent(student);
+                return RedirectToAction(nameof(Index));
 			} catch
 			{
-				return View();
+				return View(student);
 			}
 		}
 
 		// GET: StudentController/Delete/5
-		public ActionResult Delete(int id)
+		public async Task<ActionResult> Delete(int id)
 		{
-			return View();
-		}
+            var student = await context.GetStudentById(id);
+            if(student == null)
+            {
+                return NotFound();
+            }
+            return View(student);
+        }
 
 		// POST: StudentController/Delete/5
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
+		public async Task<ActionResult> Delete(int id, Student students)
 		{
-			try
+            var student = await context.GetStudentById(id);
+            if(student == null)
+            {
+                return NotFound();
+            }
+
+            try
 			{
-				return RedirectToAction(nameof(Index));
-			} catch
+                await context.DeleteStudent(student);
+                return RedirectToAction(nameof(Index));
+            } catch
 			{
-				return View();
+				return View(student);
 			}
 		}
 	}
